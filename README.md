@@ -36,6 +36,10 @@ If you use Maven, here's what you should do to get started:
 **Step 2:** Build the Maven project and verify that it works and that the driver is correctly bundled (and unpacked).
 - In the project root (the directory with `pom.xml` in it), run `mvn package`.
 - Run the resulting JAR file: `java -jar target/comedielevator-1.0-SNAPSHOT-jar-with-dependencies.jar`
+ 
+**Step 3..(N-1):** ???
+
+**Step N:** Profit!
 
 
 How to do it yourself (how I did it):
