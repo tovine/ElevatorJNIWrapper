@@ -53,6 +53,7 @@ public class NativeInterface {
 		} catch (IOException e) {
 			System.out.println("ERROR: unable to read library file: " + e.getMessage());
 			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 
