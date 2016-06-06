@@ -2,6 +2,7 @@ package no.ntnu.stud.torbjovn.comedielevator;
 
 import cz.adamh.utils.NativeUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -51,8 +52,10 @@ public class NativeInterface {
 		try {
 			NativeUtils.loadLibraryFromJar("/libelevator.so");
 		} catch (IOException e) {
-			System.out.println("ERROR: unable to read library file: " + e.getMessage());
-			e.printStackTrace();
+			if (FileNotFoundException.class.isInstance(e))
+				System.out.println("ERROR: unable to read library file: " + e.getMessage());
+			else
+				e.printStackTrace();
 			System.exit(1);
 		}
 	}
