@@ -1,6 +1,4 @@
 #include <assert.h>
-#include <signal.h>
-
 #include "no_ntnu_stud_torbjovn_comedielevator_NativeInterface.h"
 #include "elev.h"
 
@@ -26,32 +24,14 @@ elev_button_type_t getButtonType(int button) {
 }
 
 /*
- * Signal handler for SIGABRT (which is thrown whenever an assertion fails)
- * TODO: this does not yet work as intended, unable to catch SIGABRT and keep running
- */
-jboolean sigabrt_raised = 0;
-void sigabrt_handler(int signum) {
-    sigabrt_raised = 1;
-}
-
-/*
  * Class:     no_ntnu_stud_torbjovn_comedielevator_NativeInterface
  * Method:    elev_init
- * Signature: (Z)Z
+ * Signature: (Z)V
  */
-JNIEXPORT jboolean JNICALL Java_no_ntnu_stud_torbjovn_comedielevator_NativeInterface_elev_1init
+JNIEXPORT void JNICALL Java_no_ntnu_stud_torbjovn_comedielevator_NativeInterface_elev_1init
   (JNIEnv * env, jobject obj, jboolean simulated) {
-    // Register our signal handler to avoid termination (sort of equal to try/catch)
-    signal(SIGABRT, sigabrt_handler);
     if (simulated) elev_init(ET_Simulation);
     else elev_init(ET_Comedi);
-    // Unregister our signal handler and return to normal
-    signal(SIGABRT, SIG_DFL);
-    if (!sigabrt_raised) // No SIGABRT this time, all is well.
-        return 1;
-    // If a SIGABRT was raised, reset the flag for next use and return false to indicate error
-    sigabrt_raised = 0;
-    return 0;
   }
 
 /*

@@ -56,22 +56,42 @@ public class NativeInterface {
 		}
 	}
 
-	public NativeInterface() {
-		if (!elev_init(false)) {
-			System.out.println("Failed to initialize elevator hardware! Trying simulator...");
-			if (!elev_init(true))
-				throw new RuntimeException("Failed to initialize elevator driver, both hardware and simulator unavailable!");
-			System.out.println("Simulator initialization done");
-		} else
-			System.out.println("HW initialization done");
+	/**
+	 * This constructor attempts to initialize the hardware (or the simulator) - if it fails, the C
+	 * code will raise SIGABRT and kill the application (therefore it may be a good idea to do this
+	 * before initializing anything else that needs to be explicitly closed or deallocated).
+	 * @param simulated -- Whether or not to use the simulator or the actual hardware
+	 */
+	public NativeInterface(boolean simulated) {
+		elev_init(simulated);
+		System.out.println("Elevator initialization done");
 	}
 
 	public static void main(String[] args) {
-		NativeInterface nativeInterface = new NativeInterface();
+		boolean simulated = false;
+		for (String arg : args) {
+			if (arg.matches("^\\-{1,2}sim(ulated|ulator|)$")) {
+				simulated = true;
+				System.out.println("Starting in simulator mode as requested...");
+			}
+		}
+		NativeInterface nativeInterface = new NativeInterface(simulated);
 	}
 
-	public native boolean elev_init(boolean simulated);
-//	public native boolean elev_init(ElevatorType e);
+	/*
+	 * The functions below that are commented out represent the variants that take enums as parameter
+	 * instead of just primitive types.
+	 * I decided not to use them as it would imply one extra C file (and headers) per enumerated type,
+	 * however they are included just for reference in case you want to try it.
+	 *
+	 * In order to use them:
+	 *   - uncomment them (and comment out the currently used ones)
+	 *   - navigate to 'src/main' and run 'javah -stubs no.ntnu.stud.torbjovn.comedielevator.NativeInterface'
+	 *     - Move the resulting header file to 'driver/' (replacing the existing one)
+	 *   - update the implementation in 'driver/JNIFunctions.c' to match the new header file.
+	 */
+	public native void elev_init(boolean simulated);
+//	public native void elev_init(ElevatorType e);
 
 	public native void elev_set_motor_direction(int dirn);
 //	public native void elev_set_motor_direction(MotorDirection dirn);

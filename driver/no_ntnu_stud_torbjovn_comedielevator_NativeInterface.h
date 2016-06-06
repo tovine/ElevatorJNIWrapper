@@ -22,9 +22,9 @@ extern "C" {
 /*
  * Class:     no_ntnu_stud_torbjovn_comedielevator_NativeInterface
  * Method:    elev_init
- * Signature: (Z)Z
+ * Signature: (Z)V
  */
-JNIEXPORT jboolean JNICALL Java_no_ntnu_stud_torbjovn_comedielevator_NativeInterface_elev_1init
+JNIEXPORT void JNICALL Java_no_ntnu_stud_torbjovn_comedielevator_NativeInterface_elev_1init
   (JNIEnv *, jobject, jboolean);
 
 /*
